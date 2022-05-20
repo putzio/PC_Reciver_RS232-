@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace PC_Reciver_RS232
 {
-    public struct AltimeterDataRange
-    {
-        public int time, hight;
-        AltimeterDataRange(int t = 0, int h=0)
-        {
-            time = t;
-            hight = h;
-        }
-    }
+    //public struct AltimeterDataRange
+    //{
+    //    public int time, hight;
+    //    AltimeterDataRange(int t = 0, int h=0)
+    //    {
+    //        time = t;
+    //        hight = h;
+    //    }
+    //}
     internal class AltimeterData
     {
         public int hight;
@@ -23,7 +23,8 @@ namespace PC_Reciver_RS232
         {
             data,
             series,
-            END
+            END,
+            range
         };
         public EndAltimeter endAltimeter;
         //format:
@@ -39,11 +40,24 @@ namespace PC_Reciver_RS232
             time = t;
             hight = h;
             endAltimeter = end;
+
         }
         public String ReturnData()
         {
             return (time.ToString() + ";" + hight.ToString()+";");
         }
-
+    }
+    internal class AltimeterDataRange:AltimeterData
+    {
+        public AltimeterDataRange(int t = 0, int h = 0): base(EndAltimeter.range, t, h)
+        {
+        }
+        public void CheckNewRange(AltimeterData data)
+        {
+            if (this.time < data.time)
+                this.time = data.time;
+            if (this.hight < data.hight)
+                this.hight = data.hight;
+        }
     }
 }

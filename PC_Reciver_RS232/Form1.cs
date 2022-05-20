@@ -12,29 +12,11 @@ using System.IO;
 
 namespace PC_Reciver_RS232
 {
-    //public class ConnectionParameters
-    //{
-    //    public int baud, bitNr;
-    //    public String port;
-    //    public ConnectionParameters(int baudInit = 9600, int bitNrInit = 8, string portInit = null)
-    //    {
-    //        baud = baudInit;
-    //        bitNr = bitNrInit;
-    //        port = portInit;
-    //    }
-    //    public void UpdateConnectionParameters(int newBaud, int newBitNr, string newPort)
-    //    {
-    //        baud = newBaud;
-    //        bitNr = newBitNr;
-    //        port = newPort;
-    //    }
-    //}
     public partial class Form1 : Form
     {
         delegate void SetTextCallback(string text);
         string InputData = String.Empty;
         Queue<AltimeterData> altimeterDatas = new Queue<AltimeterData>();
-        Queue<Queue<AltimeterData>> altimeterDatasq = new Queue<Queue<AltimeterData>>();
         AltimeterDataRange altimeterDataRange = new AltimeterDataRange();//Change to AltimeterData
         public struct ConnectionParameters
         {
@@ -59,11 +41,6 @@ namespace PC_Reciver_RS232
             InitializeComponent();
             InitialiseConnectionParameters();
             serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(port_DataReceived_1);
-        }
-       private void buttonConnectionSettings_Click(object sender, EventArgs e)
-        {
-            ConnectionSettings connectionSettings = new ConnectionSettings();
-            connectionSettings.ShowDialog();
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)
@@ -117,7 +94,23 @@ namespace PC_Reciver_RS232
 
         private void button_Refresh_Click(object sender, EventArgs e)
         {
-
+            comboBox_Port.Items.Clear();
+            string[] ArrayComPortsNames = null;
+            int index = -1;
+            string ComPortName = null;
+            ArrayComPortsNames = SerialPort.GetPortNames();
+            if (ArrayComPortsNames.Length > 0)
+            {
+                do
+                {
+                    index += 1;
+                    comboBox_Port.Items.Add(ArrayComPortsNames[index]);
+                }
+                while (!((ArrayComPortsNames[index] == ComPortName) || (index ==
+                ArrayComPortsNames.GetUpperBound(0))));
+                Array.Sort(ArrayComPortsNames);
+                comboBox_Port.Text = comboBox_Port.Items[0].ToString();
+            }
         }
         private void port_DataReceived_1(object sender, SerialDataReceivedEventArgs e)
         {
@@ -132,10 +125,9 @@ namespace PC_Reciver_RS232
             textBoxInfo.Text += text;
             if (text.Length < 3)
             {
-                textBoxError.Text += ("Przesłany tekst: \t" + text + "\t Jest za krótki");
+                MessageBox.Show("Przesłany tekst: \t" + text + "\t Jest za krótki");
                 return;
             }
-            textBoxError.Text += text.Substring(0, 3);
             if (text == "END\r\n")
             {
                 AltimeterData altimeter = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
@@ -153,20 +145,13 @@ namespace PC_Reciver_RS232
             {
                 AltimeterData altimeter = new AltimeterData(text);
                 altimeterDatas.Enqueue(altimeter);
-                altimeterDataRange = CheckNewRange(altimeterDataRange, altimeter);
+                altimeterDataRange.CheckNewRange(altimeter);
             }
-            else
+
+            else if(text.Substring(0,3) != "STA")
             {
                 MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
             }
-        }
-        private AltimeterDataRange CheckNewRange(AltimeterDataRange range, AltimeterData data)
-        {
-            if (range.time < data.time)
-                range.time = data.time;
-            if (range.hight < data.hight)
-                range.hight = data.hight;
-            return range;
         }
         private void PlotAndExport()
         {
@@ -177,7 +162,7 @@ namespace PC_Reciver_RS232
         private void Plot(AltimeterDataRange range)
         {
             var objChart = chart.ChartAreas[0];
-            objChart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
+            objChart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
 
             objChart.AxisX.Minimum = 0;
             objChart.AxisX.Maximum = range.time + 10;
@@ -186,13 +171,16 @@ namespace PC_Reciver_RS232
 
             objChart.AxisY.Minimum = 0;
             objChart.AxisY.Maximum = range.hight + 10;
+            
             chart.Series.Clear();
+
             Random rnd = new Random();
             int chartNr = 0;
             chartNr++;
             String chartName = "Seria: " + chartNr.ToString();
             chart.Series.Add(chartName);
             chart.Series[chartName].Color = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+            //chart.Series[chartName].Legend;
             //chart.Series["1st"].Legend = "Legenda";
             //chart.Series["1st"].ChartArea = "Chart Area";
             chart.Series[chartName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -206,8 +194,6 @@ namespace PC_Reciver_RS232
                     chartName = "Seria: " + chartNr.ToString();
                     chart.Series.Add(chartName);
                     chart.Series[chartName].Color = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
-                    //chart.Series["1st"].Legend = "Legenda";
-                    //chart.Series["1st"].ChartArea = "Chart Area";
                     chart.Series[chartName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                 }
                 else
@@ -231,7 +217,6 @@ namespace PC_Reciver_RS232
                 AltimeterData altimeter = altimeterDatas.Dequeue();
                 if (altimeter.endAltimeter == AltimeterData.EndAltimeter.END)
                 {
-                    textBoxError.Text += "/r/n END OF FILE";
                     break;
                 }
                 if (altimeter.endAltimeter == AltimeterData.EndAltimeter.series)
@@ -327,6 +312,20 @@ namespace PC_Reciver_RS232
             message += numericUpDownPreassure.Value.ToString();
             message += "&";
             serialPort1.Write(message);
+        }
+
+        private void buttonShowMessages_Click(object sender, EventArgs e)
+        {
+            if (buttonShowMessages.Text == "Pokaż odbierane wiadomości")
+            {
+                buttonShowMessages.Text = "Ukryj odbierane wiadomości";
+                textBoxInfo.Visible = true;
+            }
+            else
+            {
+                buttonShowMessages.Text = "Pokaż odbierane wiadomości";
+                textBoxInfo.Visible = false;
+            }
         }
     }
 }

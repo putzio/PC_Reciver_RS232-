@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            this.buttonConnectionSettings = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -55,22 +54,12 @@
             this.numericUpDownPreassure = new System.Windows.Forms.NumericUpDown();
             this.buttonWritePreassure = new System.Windows.Forms.Button();
             this.buttonClearFlash = new System.Windows.Forms.Button();
-            this.textBoxError = new System.Windows.Forms.TextBox();
+            this.buttonShowMessages = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBoxConnected.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPreassure)).BeginInit();
             this.SuspendLayout();
-            // 
-            // buttonConnectionSettings
-            // 
-            this.buttonConnectionSettings.Location = new System.Drawing.Point(12, 282);
-            this.buttonConnectionSettings.Name = "buttonConnectionSettings";
-            this.buttonConnectionSettings.Size = new System.Drawing.Size(168, 35);
-            this.buttonConnectionSettings.TabIndex = 0;
-            this.buttonConnectionSettings.Text = "Ustawienia połączenia";
-            this.buttonConnectionSettings.UseVisualStyleBackColor = true;
-            this.buttonConnectionSettings.Click += new System.EventHandler(this.buttonConnectionSettings_Click);
             // 
             // buttonConnect
             // 
@@ -88,13 +77,13 @@
             this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
-            this.chart.Location = new System.Drawing.Point(12, 358);
+            chartArea2.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart.Legends.Add(legend2);
+            this.chart.Location = new System.Drawing.Point(12, 307);
             this.chart.Name = "chart";
-            this.chart.Size = new System.Drawing.Size(1034, 260);
+            this.chart.Size = new System.Drawing.Size(1034, 311);
             this.chart.TabIndex = 2;
             this.chart.Text = "chart";
             // 
@@ -275,11 +264,12 @@
             // 
             // textBoxInfo
             // 
-            this.textBoxInfo.Location = new System.Drawing.Point(767, 235);
+            this.textBoxInfo.Location = new System.Drawing.Point(859, 14);
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
-            this.textBoxInfo.Size = new System.Drawing.Size(238, 107);
+            this.textBoxInfo.Size = new System.Drawing.Size(187, 263);
             this.textBoxInfo.TabIndex = 5;
+            this.textBoxInfo.Visible = false;
             // 
             // groupBoxConnected
             // 
@@ -288,7 +278,7 @@
             this.groupBoxConnected.Controls.Add(this.buttonClearFlash);
             this.groupBoxConnected.Controls.Add(this.buttonChart);
             this.groupBoxConnected.Enabled = false;
-            this.groupBoxConnected.Location = new System.Drawing.Point(647, 35);
+            this.groupBoxConnected.Location = new System.Drawing.Point(460, 14);
             this.groupBoxConnected.Name = "groupBoxConnected";
             this.groupBoxConnected.Size = new System.Drawing.Size(377, 148);
             this.groupBoxConnected.TabIndex = 6;
@@ -337,25 +327,26 @@
             this.buttonClearFlash.UseVisualStyleBackColor = true;
             this.buttonClearFlash.Click += new System.EventHandler(this.buttonClearFlash_Click);
             // 
-            // textBoxError
+            // buttonShowMessages
             // 
-            this.textBoxError.Location = new System.Drawing.Point(468, 235);
-            this.textBoxError.Multiline = true;
-            this.textBoxError.Name = "textBoxError";
-            this.textBoxError.Size = new System.Drawing.Size(238, 107);
-            this.textBoxError.TabIndex = 7;
+            this.buttonShowMessages.Location = new System.Drawing.Point(460, 170);
+            this.buttonShowMessages.Name = "buttonShowMessages";
+            this.buttonShowMessages.Size = new System.Drawing.Size(377, 35);
+            this.buttonShowMessages.TabIndex = 7;
+            this.buttonShowMessages.Text = "Pokaż odbierane wiadomości";
+            this.buttonShowMessages.UseVisualStyleBackColor = true;
+            this.buttonShowMessages.Click += new System.EventHandler(this.buttonShowMessages_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 630);
-            this.Controls.Add(this.textBoxError);
+            this.Controls.Add(this.buttonShowMessages);
             this.Controls.Add(this.groupBoxConnected);
             this.Controls.Add(this.textBoxInfo);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.chart);
-            this.Controls.Add(this.buttonConnectionSettings);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
@@ -369,8 +360,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button buttonConnectionSettings;
         private System.Windows.Forms.Button buttonConnect;
         private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
@@ -394,7 +383,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPreassure;
         private System.Windows.Forms.Button buttonWritePreassure;
         private System.Windows.Forms.Button buttonClearFlash;
-        private System.Windows.Forms.TextBox textBoxError;
+        private System.Windows.Forms.Button buttonShowMessages;
     }
 }
 
