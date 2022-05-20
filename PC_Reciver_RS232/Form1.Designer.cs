@@ -47,18 +47,24 @@
             this.label3 = new System.Windows.Forms.Label();
             this.comboBox_Baud = new System.Windows.Forms.ComboBox();
             this.comboBox_Port = new System.Windows.Forms.ComboBox();
-            this.button_Open = new System.Windows.Forms.Button();
             this.button_Refresh = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxInfo = new System.Windows.Forms.TextBox();
+            this.groupBoxConnected = new System.Windows.Forms.GroupBox();
+            this.numericUpDownPreassure = new System.Windows.Forms.NumericUpDown();
+            this.buttonWritePreassure = new System.Windows.Forms.Button();
+            this.buttonClearFlash = new System.Windows.Forms.Button();
+            this.textBoxError = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBoxConnected.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPreassure)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonConnectionSettings
             // 
-            this.buttonConnectionSettings.Location = new System.Drawing.Point(284, 60);
+            this.buttonConnectionSettings.Location = new System.Drawing.Point(12, 282);
             this.buttonConnectionSettings.Name = "buttonConnectionSettings";
             this.buttonConnectionSettings.Size = new System.Drawing.Size(168, 35);
             this.buttonConnectionSettings.TabIndex = 0;
@@ -68,9 +74,9 @@
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(65, 60);
+            this.buttonConnect.Location = new System.Drawing.Point(143, 223);
             this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(129, 35);
+            this.buttonConnect.Size = new System.Drawing.Size(273, 35);
             this.buttonConnect.TabIndex = 1;
             this.buttonConnect.Text = "Otwórz";
             this.buttonConnect.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -79,21 +85,24 @@
             // 
             // chart
             // 
+            this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             chartArea1.Name = "ChartArea1";
             this.chart.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(12, 358);
             this.chart.Name = "chart";
-            this.chart.Size = new System.Drawing.Size(929, 176);
+            this.chart.Size = new System.Drawing.Size(1034, 260);
             this.chart.TabIndex = 2;
             this.chart.Text = "chart";
             // 
             // buttonChart
             // 
-            this.buttonChart.Location = new System.Drawing.Point(65, 185);
+            this.buttonChart.Location = new System.Drawing.Point(23, 36);
             this.buttonChart.Name = "buttonChart";
-            this.buttonChart.Size = new System.Drawing.Size(129, 29);
+            this.buttonChart.Size = new System.Drawing.Size(336, 29);
             this.buttonChart.TabIndex = 3;
             this.buttonChart.Text = "Rysuj wykres";
             this.buttonChart.UseVisualStyleBackColor = true;
@@ -105,19 +114,19 @@
             this.groupBox1.Controls.Add(this.comboBox_Parity);
             this.groupBox1.Controls.Add(this.comboBox_Stop);
             this.groupBox1.Controls.Add(this.comboBox_BitNr);
+            this.groupBox1.Controls.Add(this.buttonConnect);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBox_Baud);
             this.groupBox1.Controls.Add(this.comboBox_Port);
-            this.groupBox1.Controls.Add(this.button_Open);
             this.groupBox1.Controls.Add(this.button_Refresh);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(483, 15);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(432, 266);
+            this.groupBox1.Size = new System.Drawing.Size(432, 264);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parametry połączenia";
@@ -233,16 +242,6 @@
             this.comboBox_Port.Size = new System.Drawing.Size(160, 24);
             this.comboBox_Port.TabIndex = 47;
             // 
-            // button_Open
-            // 
-            this.button_Open.Location = new System.Drawing.Point(147, 220);
-            this.button_Open.Margin = new System.Windows.Forms.Padding(4);
-            this.button_Open.Name = "button_Open";
-            this.button_Open.Size = new System.Drawing.Size(269, 28);
-            this.button_Open.TabIndex = 46;
-            this.button_Open.Text = "Otwórz";
-            this.button_Open.UseVisualStyleBackColor = true;
-            // 
             // button_Refresh
             // 
             this.button_Refresh.Location = new System.Drawing.Point(316, 26);
@@ -276,28 +275,94 @@
             // 
             // textBoxInfo
             // 
-            this.textBoxInfo.Location = new System.Drawing.Point(214, 188);
+            this.textBoxInfo.Location = new System.Drawing.Point(767, 235);
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
             this.textBoxInfo.Size = new System.Drawing.Size(238, 107);
             this.textBoxInfo.TabIndex = 5;
+            // 
+            // groupBoxConnected
+            // 
+            this.groupBoxConnected.Controls.Add(this.numericUpDownPreassure);
+            this.groupBoxConnected.Controls.Add(this.buttonWritePreassure);
+            this.groupBoxConnected.Controls.Add(this.buttonClearFlash);
+            this.groupBoxConnected.Controls.Add(this.buttonChart);
+            this.groupBoxConnected.Enabled = false;
+            this.groupBoxConnected.Location = new System.Drawing.Point(647, 35);
+            this.groupBoxConnected.Name = "groupBoxConnected";
+            this.groupBoxConnected.Size = new System.Drawing.Size(377, 148);
+            this.groupBoxConnected.TabIndex = 6;
+            this.groupBoxConnected.TabStop = false;
+            this.groupBoxConnected.Text = "Operacje po połączeniu";
+            // 
+            // numericUpDownPreassure
+            // 
+            this.numericUpDownPreassure.Location = new System.Drawing.Point(23, 113);
+            this.numericUpDownPreassure.Maximum = new decimal(new int[] {
+            1500,
+            0,
+            0,
+            0});
+            this.numericUpDownPreassure.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numericUpDownPreassure.Name = "numericUpDownPreassure";
+            this.numericUpDownPreassure.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDownPreassure.TabIndex = 6;
+            this.numericUpDownPreassure.Value = new decimal(new int[] {
+            1020,
+            0,
+            0,
+            0});
+            // 
+            // buttonWritePreassure
+            // 
+            this.buttonWritePreassure.Location = new System.Drawing.Point(168, 107);
+            this.buttonWritePreassure.Name = "buttonWritePreassure";
+            this.buttonWritePreassure.Size = new System.Drawing.Size(191, 29);
+            this.buttonWritePreassure.TabIndex = 5;
+            this.buttonWritePreassure.Text = "Ustaw ciśnienie";
+            this.buttonWritePreassure.UseVisualStyleBackColor = true;
+            this.buttonWritePreassure.Click += new System.EventHandler(this.buttonWritePreassure_Click);
+            // 
+            // buttonClearFlash
+            // 
+            this.buttonClearFlash.Location = new System.Drawing.Point(23, 72);
+            this.buttonClearFlash.Name = "buttonClearFlash";
+            this.buttonClearFlash.Size = new System.Drawing.Size(336, 29);
+            this.buttonClearFlash.TabIndex = 4;
+            this.buttonClearFlash.Text = "Wyczyść Flash";
+            this.buttonClearFlash.UseVisualStyleBackColor = true;
+            this.buttonClearFlash.Click += new System.EventHandler(this.buttonClearFlash_Click);
+            // 
+            // textBoxError
+            // 
+            this.textBoxError.Location = new System.Drawing.Point(468, 235);
+            this.textBoxError.Multiline = true;
+            this.textBoxError.Name = "textBoxError";
+            this.textBoxError.Size = new System.Drawing.Size(238, 107);
+            this.textBoxError.TabIndex = 7;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 630);
+            this.Controls.Add(this.textBoxError);
+            this.Controls.Add(this.groupBoxConnected);
             this.Controls.Add(this.textBoxInfo);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.buttonChart);
             this.Controls.Add(this.chart);
-            this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.buttonConnectionSettings);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBoxConnected.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPreassure)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -321,11 +386,15 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBox_Baud;
         private System.Windows.Forms.ComboBox comboBox_Port;
-        private System.Windows.Forms.Button button_Open;
         private System.Windows.Forms.Button button_Refresh;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxInfo;
+        private System.Windows.Forms.GroupBox groupBoxConnected;
+        private System.Windows.Forms.NumericUpDown numericUpDownPreassure;
+        private System.Windows.Forms.Button buttonWritePreassure;
+        private System.Windows.Forms.Button buttonClearFlash;
+        private System.Windows.Forms.TextBox textBoxError;
     }
 }
 

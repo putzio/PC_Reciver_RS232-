@@ -33,7 +33,9 @@ namespace PC_Reciver_RS232
     {
         delegate void SetTextCallback(string text);
         string InputData = String.Empty;
-        Queue<AltimeterData> dataset = new Queue<AltimeterData>();
+        Queue<AltimeterData> altimeterDatas = new Queue<AltimeterData>();
+        Queue<Queue<AltimeterData>> altimeterDatasq = new Queue<Queue<AltimeterData>>();
+        AltimeterDataRange altimeterDataRange = new AltimeterDataRange();//Change to AltimeterData
         public struct ConnectionParameters
         {
             public int baud, bitNr;
@@ -85,6 +87,7 @@ namespace PC_Reciver_RS232
                     serialPort1.Open();
                     serialPort1.Write("START");
                     buttonConnect.Text = "Zamknij";
+                    groupBoxConnected.Enabled = true;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -98,6 +101,7 @@ namespace PC_Reciver_RS232
                 {
                     serialPort1.Close();
                     buttonConnect.Text = "Otwórz";
+                    groupBoxConnected.Enabled = false;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -126,64 +130,135 @@ namespace PC_Reciver_RS232
         private void SetText(string text)
         {
             textBoxInfo.Text += text;
-            if (text.Substring(0,3) == "END")
+            if (text.Length < 3)
             {
+                textBoxError.Text += ("Przesłany tekst: \t" + text + "\t Jest za krótki");
+                return;
+            }
+            textBoxError.Text += text.Substring(0, 3);
+            if (text == "END\r\n")
+            {
+                AltimeterData altimeter = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
+                altimeterDatas.Enqueue(altimeter);
                 PlotAndExport();
+                return;
+            }
+            else if (text.Substring(0, 3) == "end")
+            {
+                AltimeterData altimeter = new AltimeterData(AltimeterData.EndAltimeter.series);
+                altimeterDatas.Enqueue(altimeter);
                 return;
             }
             else if (text.Substring(0, 3) == "#t:")
             {
                 AltimeterData altimeter = new AltimeterData(text);
-                dataset.Enqueue(altimeter);
+                altimeterDatas.Enqueue(altimeter);
+                altimeterDataRange = CheckNewRange(altimeterDataRange, altimeter);
             }
             else
             {
                 MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
             }
         }
+        private AltimeterDataRange CheckNewRange(AltimeterDataRange range, AltimeterData data)
+        {
+            if (range.time < data.time)
+                range.time = data.time;
+            if (range.hight < data.hight)
+                range.hight = data.hight;
+            return range;
+        }
         private void PlotAndExport()
         {
-            Plot();
-            ExportToCSV();
+            Plot(altimeterDataRange);
+            //ExportToCSV();
         }
 
-        private void Plot(int xMax = 500, int yMax = 50000)
+        private void Plot(AltimeterDataRange range)
         {
             var objChart = chart.ChartAreas[0];
             objChart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Seconds;
 
             objChart.AxisX.Minimum = 0;
-            objChart.AxisX.Maximum = 500;
+            objChart.AxisX.Maximum = range.time + 10;
 
             objChart.AxisY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
 
             objChart.AxisY.Minimum = 0;
-            objChart.AxisY.Maximum = 50000;
+            objChart.AxisY.Maximum = range.hight + 10;
             chart.Series.Clear();
-
-            chart.Series.Add("1st");
-            chart.Series["1st"].Color = Color.FromArgb(0, 0, 128);
+            Random rnd = new Random();
+            int chartNr = 0;
+            chartNr++;
+            String chartName = "Seria: " + chartNr.ToString();
+            chart.Series.Add(chartName);
+            chart.Series[chartName].Color = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
             //chart.Series["1st"].Legend = "Legenda";
             //chart.Series["1st"].ChartArea = "Chart Area";
-            chart.Series["1st"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-
-            textBoxInfo.Text = "";
-            foreach (AltimeterData a in dataset)
+            chart.Series[chartName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            foreach (AltimeterData altimeters in altimeterDatas)
             {
-                chart.Series["1st"].Points.AddXY(a.time, a.hight);
-                textBoxInfo.Text += a.hight;
-                textBoxInfo.Text += "\r\n";
+                if (altimeters.endAltimeter == AltimeterData.EndAltimeter.END)
+                    break;
+                if (altimeters.endAltimeter == AltimeterData.EndAltimeter.series)
+                {
+                    chartNr++;
+                    chartName = "Seria: " + chartNr.ToString();
+                    chart.Series.Add(chartName);
+                    chart.Series[chartName].Color = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+                    //chart.Series["1st"].Legend = "Legenda";
+                    //chart.Series["1st"].ChartArea = "Chart Area";
+                    chart.Series[chartName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                }
+                else
+                {
+                    chart.Series[chartName].Points.AddXY(altimeters.time, altimeters.hight);
+                    textBoxInfo.Text += altimeters.hight;
+                    textBoxInfo.Text += "\r\n";
+                }
             }
+            
         }
 
         private async void ExportToCSV ()
         {
-            
-            StreamWriter file = new StreamWriter("results.csv");
-
-            foreach (AltimeterData a in dataset)
+            List<String> linesCSV = new List<string>();
+            int dataSetNumber = 1;
+            linesCSV.Add("");
+            int line = 1;
+            for(int i = 1; i < altimeterDatas.Count; i++)
             {
-                file.WriteLine(a.time + ";" + a.hight);
+                AltimeterData altimeter = altimeterDatas.Dequeue();
+                if (altimeter.endAltimeter == AltimeterData.EndAltimeter.END)
+                    break;
+                if (altimeter.endAltimeter == AltimeterData.EndAltimeter.series)
+                {
+                    line = 1;
+                    dataSetNumber++;
+                }
+                if (linesCSV.Count < line)
+                {
+                    linesCSV.Add("");
+                }
+                String newText = altimeter.ReturnData();
+                linesCSV[line] += newText;
+                line++;
+            }
+            String firstLine = "";
+            for (int i = 0; i < dataSetNumber; i++)
+            {
+                firstLine += "T";
+                firstLine += (i + 1).ToString();
+                firstLine += ";H";
+                firstLine += (i + 1).ToString();
+                firstLine += ";";
+            }
+            firstLine.Substring(0, firstLine.Length - 1);
+            linesCSV[0] = firstLine;
+            StreamWriter file = new StreamWriter("results.csv");
+            foreach (String writeLine in linesCSV)
+            {
+                file.WriteLine(writeLine);
             }
             file.Close();
         }
@@ -219,7 +294,7 @@ namespace PC_Reciver_RS232
                     comboBox_Port.Items.Add(ArrayComPortsNames[index]);
                 }
                 while (!((ArrayComPortsNames[index] == ComPortName) || (index ==
-               ArrayComPortsNames.GetUpperBound(0))));
+                ArrayComPortsNames.GetUpperBound(0))));
                 Array.Sort(ArrayComPortsNames);
                 comboBox_Port.Text = comboBox_Port.Items[0].ToString();
             }
@@ -231,6 +306,19 @@ namespace PC_Reciver_RS232
                 comboBox_BitNr.Items.Add(i);
             }
             comboBox_BitNr.Text = "8";
+        }
+
+        private void buttonClearFlash_Click(object sender, EventArgs e)
+        {
+            serialPort1.Write("###");
+        }
+
+        private void buttonWritePreassure_Click(object sender, EventArgs e)
+        {
+            String message = "#P:";
+            message += numericUpDownPreassure.Value.ToString();
+            message += "&";
+            serialPort1.Write(message);
         }
     }
 }
