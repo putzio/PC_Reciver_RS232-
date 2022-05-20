@@ -42,7 +42,7 @@ namespace PC_Reciver_RS232
         }
         public String ReturnData()
         {
-            return (time.ToString() + ";" + hight.ToString());
+            return (time.ToString() + ";" + hight.ToString()+";");
         }
 
     }

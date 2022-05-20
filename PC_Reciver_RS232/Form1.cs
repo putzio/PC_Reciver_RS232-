@@ -171,7 +171,7 @@ namespace PC_Reciver_RS232
         private void PlotAndExport()
         {
             Plot(altimeterDataRange);
-            //ExportToCSV();
+            ExportToCSV();
         }
 
         private void Plot(AltimeterDataRange range)
@@ -226,24 +226,32 @@ namespace PC_Reciver_RS232
             int dataSetNumber = 1;
             linesCSV.Add("");
             int line = 1;
-            for(int i = 1; i < altimeterDatas.Count; i++)
+            for(int i = 1; altimeterDatas.Count>0; i++)
             {
                 AltimeterData altimeter = altimeterDatas.Dequeue();
                 if (altimeter.endAltimeter == AltimeterData.EndAltimeter.END)
+                {
+                    textBoxError.Text += "/r/n END OF FILE";
                     break;
+                }
                 if (altimeter.endAltimeter == AltimeterData.EndAltimeter.series)
                 {
                     line = 1;
                     dataSetNumber++;
                 }
-                if (linesCSV.Count < line)
+                if (linesCSV.Count < line + 1)
                 {
                     linesCSV.Add("");
+                    for(int j = 1; j < dataSetNumber; j++)
+                    {
+                        linesCSV[line] += ";;";
+                    }
                 }
                 String newText = altimeter.ReturnData();
                 linesCSV[line] += newText;
                 line++;
             }
+
             String firstLine = "";
             for (int i = 0; i < dataSetNumber; i++)
             {
