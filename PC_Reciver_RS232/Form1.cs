@@ -13,35 +13,21 @@ using System.IO;
 namespace PC_Reciver_RS232
 {
     public partial class Form1 : Form
-    {
-        delegate void SetTextCallback(string text);
+    {       
         string InputData = String.Empty;
         Queue<AltimeterData> altimeterDatas = new Queue<AltimeterData>();
-        AltimeterDataRange altimeterDataRange = new AltimeterDataRange();//Change to AltimeterData
-        public struct ConnectionParameters
-        {
-            public int baud, bitNr;
-            public String port;
-            public ConnectionParameters(int baudInit = 9600, int bitNrInit = 8, string portInit = null)
-            {
-                baud = baudInit;
-                bitNr = bitNrInit;
-                port = portInit;
-            }
-            public void UpdateConnectionParameters(int newBaud, int newBitNr, string newPort)
-            {
-                baud = newBaud;
-                bitNr = newBitNr;
-                port = newPort;
-            }
-        }
-        public ConnectionParameters connectionParameters = new ConnectionParameters();
+        AltimeterDataRange altimeterDataRange = new AltimeterDataRange();        
+        ConnectionParameters connectionParameters = new ConnectionParameters();
+
+        delegate void SetTextCallback(string text);
+
         public Form1()
         {
             InitializeComponent();
             InitialiseConnectionParameters();
             serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(port_DataReceived_1);
         }
+               
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
@@ -57,8 +43,7 @@ namespace PC_Reciver_RS232
                 serialPort1.BaudRate = connectionParameters.baud;
                 serialPort1.DataBits = connectionParameters.bitNr;
                 serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), "One");
-                serialPort1.Handshake = (Handshake)Enum.Parse(typeof(Handshake),
-               "None");
+                serialPort1.Handshake = (Handshake)Enum.Parse(typeof(Handshake), "None");
                 try
                 {
                     serialPort1.Open();
@@ -128,24 +113,26 @@ namespace PC_Reciver_RS232
                 MessageBox.Show("Przesłany tekst: \t" + text + "\t Jest za krótki");
                 return;
             }
-            if (text == "END\r\n")
+            if (text.Substring(0, 3) == "END")
             {
-                AltimeterData altimeter = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
-                altimeterDatas.Enqueue(altimeter);
+                //end of the last data series
+                AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
+                altimeterDatas.Enqueue(altimeterData);
                 PlotAndExport();
                 return;
             }
             else if (text.Substring(0, 3) == "end")
-            {
-                AltimeterData altimeter = new AltimeterData(AltimeterData.EndAltimeter.series);
-                altimeterDatas.Enqueue(altimeter);
+            { 
+                //End of data series
+                AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.series);
+                altimeterDatas.Enqueue(altimeterData);
                 return;
             }
             else if (text.Substring(0, 3) == "#t:")
             {
-                AltimeterData altimeter = new AltimeterData(text);
-                altimeterDatas.Enqueue(altimeter);
-                altimeterDataRange.CheckNewRange(altimeter);
+                AltimeterData altimeterData = new AltimeterData(text);
+                altimeterDatas.Enqueue(altimeterData);
+                altimeterDataRange.CheckNewRange(altimeterData);
             }
 
             else if(text.Substring(0,3) != "STA")
@@ -153,43 +140,46 @@ namespace PC_Reciver_RS232
                 MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
             }
         }
-        private void PlotAndExport()
+        private async void PlotAndExport()
         {
-            Plot(altimeterDataRange);
-            ExportToCSV();
+            List<Task> tasks = new List<Task>();
+            
+            tasks.Add(Task.Run(()=>ExportToCSV()));
+            Plot();
+            await Task.WhenAll(tasks);
         }
 
-        private void Plot(AltimeterDataRange range)
+        private void Plot()
         {
+            //Chart axis setup
             var objChart = chart.ChartAreas[0];
             objChart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
 
             objChart.AxisX.Minimum = 0;
-            objChart.AxisX.Maximum = range.time + 10;
+            objChart.AxisX.Maximum = altimeterDataRange.time + 10;
 
             objChart.AxisY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
 
             objChart.AxisY.Minimum = 0;
-            objChart.AxisY.Maximum = range.hight + 10;
-            
-            chart.Series.Clear();
+            objChart.AxisY.Maximum = altimeterDataRange.hight + 10;
 
-            Random rnd = new Random();
+            chart.Series.Clear();
+            //Create the first chart Series            
             int chartNr = 0;
             chartNr++;
             String chartName = "Seria: " + chartNr.ToString();
             chart.Series.Add(chartName);
+            Random rnd = new Random();
             chart.Series[chartName].Color = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
-            //chart.Series[chartName].Legend;
-            //chart.Series["1st"].Legend = "Legenda";
-            //chart.Series["1st"].ChartArea = "Chart Area";
             chart.Series[chartName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            foreach (AltimeterData altimeters in altimeterDatas)
+
+            foreach (AltimeterData altimeterData in altimeterDatas)
             {
-                if (altimeters.endAltimeter == AltimeterData.EndAltimeter.END)
+                if (altimeterData.endAltimeter == AltimeterData.EndAltimeter.END)
                     break;
-                if (altimeters.endAltimeter == AltimeterData.EndAltimeter.series)
+                if (altimeterData.endAltimeter == AltimeterData.EndAltimeter.series)
                 {
+                    //create new series
                     chartNr++;
                     chartName = "Seria: " + chartNr.ToString();
                     chart.Series.Add(chartName);
@@ -198,47 +188,52 @@ namespace PC_Reciver_RS232
                 }
                 else
                 {
-                    chart.Series[chartName].Points.AddXY(altimeters.time, altimeters.hight);
-                    textBoxInfo.Text += altimeters.hight;
+                    //draw a point in current series
+                    chart.Series[chartName].Points.AddXY(altimeterData.time, altimeterData.hight);
+                    textBoxInfo.Text += altimeterData.hight;
                     textBoxInfo.Text += "\r\n";
                 }
             }
             
         }
 
-        private async void ExportToCSV ()
+        private void ExportToCSV ()
         {
             List<String> linesCSV = new List<string>();
-            int dataSetNumber = 1;
+            int dataSeriesNumber = 1;
             linesCSV.Add("");
             int line = 1;
-            for(int i = 1; altimeterDatas.Count>0; i++)
+            //read data and write them to the coresponding line in the right place
+            foreach(AltimeterData altimeterData in altimeterDatas)
             {
-                AltimeterData altimeter = altimeterDatas.Dequeue();
-                if (altimeter.endAltimeter == AltimeterData.EndAltimeter.END)
+                if (altimeterData.endAltimeter == AltimeterData.EndAltimeter.END)
                 {
                     break;
                 }
-                if (altimeter.endAltimeter == AltimeterData.EndAltimeter.series)
+                if (altimeterData.endAltimeter == AltimeterData.EndAltimeter.series)
                 {
                     line = 1;
-                    dataSetNumber++;
+                    dataSeriesNumber++;
                 }
                 if (linesCSV.Count < line + 1)
                 {
+                    //if needed create a new line
                     linesCSV.Add("");
-                    for(int j = 1; j < dataSetNumber; j++)
+                    //and if it is not the first series add right amount of ";" to put the data in the right place 
+                    for(int j = 1; j < dataSeriesNumber; j++)
                     {
                         linesCSV[line] += ";;";
                     }
                 }
-                String newText = altimeter.ReturnData();
+                String newText = altimeterData.ReturnData();
                 linesCSV[line] += newText;
                 line++;
             }
 
+            //create the first line:
+            //"T0;H0;T1;H1" etc.
             String firstLine = "";
-            for (int i = 0; i < dataSetNumber; i++)
+            for (int i = 0; i < dataSeriesNumber; i++)
             {
                 firstLine += "T";
                 firstLine += (i + 1).ToString();
