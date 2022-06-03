@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -55,6 +55,7 @@
             this.buttonWritePreassure = new System.Windows.Forms.Button();
             this.buttonClearFlash = new System.Windows.Forms.Button();
             this.buttonShowMessages = new System.Windows.Forms.Button();
+            this.textBoxTest = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBoxConnected.SuspendLayout();
@@ -77,10 +78,10 @@
             this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart.Legends.Add(legend2);
             this.chart.Location = new System.Drawing.Point(12, 307);
             this.chart.Name = "chart";
             this.chart.Size = new System.Drawing.Size(1034, 311);
@@ -264,9 +265,12 @@
             // 
             // textBoxInfo
             // 
+            this.textBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxInfo.Location = new System.Drawing.Point(859, 14);
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
+            this.textBoxInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxInfo.Size = new System.Drawing.Size(187, 263);
             this.textBoxInfo.TabIndex = 5;
             this.textBoxInfo.Visible = false;
@@ -337,11 +341,20 @@
             this.buttonShowMessages.UseVisualStyleBackColor = true;
             this.buttonShowMessages.Click += new System.EventHandler(this.buttonShowMessages_Click);
             // 
+            // textBoxTest
+            // 
+            this.textBoxTest.Location = new System.Drawing.Point(450, 211);
+            this.textBoxTest.Multiline = true;
+            this.textBoxTest.Name = "textBoxTest";
+            this.textBoxTest.Size = new System.Drawing.Size(387, 90);
+            this.textBoxTest.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1058, 630);
+            this.Controls.Add(this.textBoxTest);
             this.Controls.Add(this.buttonShowMessages);
             this.Controls.Add(this.groupBoxConnected);
             this.Controls.Add(this.textBoxInfo);
@@ -384,6 +397,7 @@
         private System.Windows.Forms.Button buttonWritePreassure;
         private System.Windows.Forms.Button buttonClearFlash;
         private System.Windows.Forms.Button buttonShowMessages;
+        private System.Windows.Forms.TextBox textBoxTest;
     }
 }
 

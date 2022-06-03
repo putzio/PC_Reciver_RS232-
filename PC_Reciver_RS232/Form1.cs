@@ -31,7 +31,7 @@ namespace PC_Reciver_RS232
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            connectionParameters.UpdateConnectionParameters(Convert.ToInt16(comboBox_Baud.Text), Convert.ToInt16(comboBox_BitNr.Text), comboBox_Port.Text);
+            connectionParameters.UpdateConnectionParameters(Convert.ToInt32(comboBox_Baud.Text), Convert.ToInt16(comboBox_BitNr.Text), comboBox_Port.Text);
             if(connectionParameters.port == null)
             {
                 MessageBox.Show("Nieprawidłowe parametry połączenia");
@@ -74,7 +74,8 @@ namespace PC_Reciver_RS232
 
         private void buttonChart_Click(object sender, EventArgs e)
         {
-            PlotAndExport();
+            //Command to get the measured data from the  device
+            serialPort1.Write("#MD");
         }
 
         private void button_Refresh_Click(object sender, EventArgs e)
@@ -133,12 +134,17 @@ namespace PC_Reciver_RS232
                 AltimeterData altimeterData = new AltimeterData(text);
                 altimeterDatas.Enqueue(altimeterData);
                 altimeterDataRange.CheckNewRange(altimeterData);
+                serialPort1.Write("ok");
+            }
+            else if(text.Substring(0, 3) =="TST")
+            {
+                textBoxTest.Text+=text.Substring(4);
             }
 
-            else if(text.Substring(0,3) != "STA")
-            {
-                MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
-            }
+            //else if()
+            //{
+            //    MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
+            //}
         }
         private async void PlotAndExport()
         {

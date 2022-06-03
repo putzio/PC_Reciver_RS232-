@@ -17,8 +17,8 @@ namespace PC_Reciver_RS232
     //}
     internal class AltimeterData
     {
-        public int hight;
-        public int time;
+        public UInt32 hight;
+        public UInt64 time;
         public enum EndAltimeter
         {
             data,
@@ -31,11 +31,13 @@ namespace PC_Reciver_RS232
         //#t:220&h:1000$
         public AltimeterData(string data)
         {
-            time = Convert.ToInt32(data.Substring(3,data.IndexOf('&')-3));
-            hight = Convert.ToInt32(data.Substring(data.IndexOf('h') + 2, data.IndexOf('$') - data.IndexOf('h') - 2));
+            time = Convert.ToUInt64(data.Substring(3,data.IndexOf('&')-3));
+            String hString = data.Substring(data.IndexOf('h') + 2, data.IndexOf('$') - data.IndexOf('h') - 2);
+            
+            hight = Convert.ToUInt32(hString);
             endAltimeter = EndAltimeter.data;
         }
-        public AltimeterData(EndAltimeter end, int t = 0, int h = 0)
+        public AltimeterData(EndAltimeter end, UInt64 t = 0, UInt32 h = 0)
         {
             time = t;
             hight = h;
@@ -49,7 +51,7 @@ namespace PC_Reciver_RS232
     }
     internal class AltimeterDataRange:AltimeterData
     {
-        public AltimeterDataRange(int t = 0, int h = 0): base(EndAltimeter.range, t, h)
+        public AltimeterDataRange(UInt64 t = 0, UInt32 h = 0): base(EndAltimeter.range, t, h)
         {
         }
         public void CheckNewRange(AltimeterData data)
