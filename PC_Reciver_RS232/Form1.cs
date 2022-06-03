@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
+//Tests
+using System.Diagnostics;
 
 namespace PC_Reciver_RS232
 {
@@ -75,7 +77,7 @@ namespace PC_Reciver_RS232
         private void buttonChart_Click(object sender, EventArgs e)
         {
             //Command to get the measured data from the  device
-            serialPort1.Write("#MD");
+            serialPort1.Write("#M");
         }
 
         private void button_Refresh_Click(object sender, EventArgs e)
@@ -108,6 +110,8 @@ namespace PC_Reciver_RS232
         }
         private void SetText(string text)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             textBoxInfo.Text += text;
             if (text.Length < 3)
             {
@@ -120,6 +124,7 @@ namespace PC_Reciver_RS232
                 AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
                 altimeterDatas.Enqueue(altimeterData);
                 PlotAndExport();
+                serialPort1.Write("K");
                 return;
             }
             else if (text.Substring(0, 3) == "end")
@@ -127,6 +132,7 @@ namespace PC_Reciver_RS232
                 //End of data series
                 AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.series);
                 altimeterDatas.Enqueue(altimeterData);
+                serialPort1.Write("K");
                 return;
             }
             else if (text.Substring(0, 3) == "#t:")
@@ -134,7 +140,9 @@ namespace PC_Reciver_RS232
                 AltimeterData altimeterData = new AltimeterData(text);
                 altimeterDatas.Enqueue(altimeterData);
                 altimeterDataRange.CheckNewRange(altimeterData);
-                serialPort1.Write("ok");
+                serialPort1.Write("K");
+                sw.Stop();
+                textBoxTest.Text = "TIME:\t"+sw.Elapsed.ToString();
             }
             else if(text.Substring(0, 3) =="TST")
             {
@@ -304,12 +312,12 @@ namespace PC_Reciver_RS232
 
         private void buttonClearFlash_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("###");
+            serialPort1.Write("##");
         }
 
         private void buttonWritePreassure_Click(object sender, EventArgs e)
         {
-            String message = "#P:";
+            String message = "#P";
             message += numericUpDownPreassure.Value.ToString();
             message += "&";
             serialPort1.Write(message);
