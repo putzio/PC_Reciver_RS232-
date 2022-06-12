@@ -29,21 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonChart = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBox_controlProtocol = new System.Windows.Forms.ComboBox();
-            this.comboBox_Parity = new System.Windows.Forms.ComboBox();
-            this.comboBox_Stop = new System.Windows.Forms.ComboBox();
-            this.comboBox_BitNr = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.comboBox_Baud = new System.Windows.Forms.ComboBox();
             this.comboBox_Port = new System.Windows.Forms.ComboBox();
             this.button_Refresh = new System.Windows.Forms.Button();
@@ -51,6 +43,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxInfo = new System.Windows.Forms.TextBox();
             this.groupBoxConnected = new System.Windows.Forms.GroupBox();
+            this.numericUpDownHight = new System.Windows.Forms.NumericUpDown();
+            this.buttonPreassureFromHight = new System.Windows.Forms.Button();
             this.numericUpDownPreassure = new System.Windows.Forms.NumericUpDown();
             this.buttonWritePreassure = new System.Windows.Forms.Button();
             this.buttonClearFlash = new System.Windows.Forms.Button();
@@ -59,12 +53,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBoxConnected.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPreassure)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(143, 223);
+            this.buttonConnect.Location = new System.Drawing.Point(143, 93);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(273, 35);
             this.buttonConnect.TabIndex = 1;
@@ -78,10 +73,10 @@
             this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart.Legends.Add(legend2);
             this.chart.Location = new System.Drawing.Point(12, 307);
             this.chart.Name = "chart";
             this.chart.Size = new System.Drawing.Size(1109, 311);
@@ -100,15 +95,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboBox_controlProtocol);
-            this.groupBox1.Controls.Add(this.comboBox_Parity);
-            this.groupBox1.Controls.Add(this.comboBox_Stop);
-            this.groupBox1.Controls.Add(this.comboBox_BitNr);
             this.groupBox1.Controls.Add(this.buttonConnect);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBox_Baud);
             this.groupBox1.Controls.Add(this.comboBox_Port);
             this.groupBox1.Controls.Add(this.button_Refresh);
@@ -116,103 +103,10 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(432, 264);
+            this.groupBox1.Size = new System.Drawing.Size(432, 150);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parametry połączenia";
-            // 
-            // comboBox_controlProtocol
-            // 
-            this.comboBox_controlProtocol.FormattingEnabled = true;
-            this.comboBox_controlProtocol.Location = new System.Drawing.Point(144, 189);
-            this.comboBox_controlProtocol.Name = "comboBox_controlProtocol";
-            this.comboBox_controlProtocol.Size = new System.Drawing.Size(272, 24);
-            this.comboBox_controlProtocol.TabIndex = 56;
-            // 
-            // comboBox_Parity
-            // 
-            this.comboBox_Parity.FormattingEnabled = true;
-            this.comboBox_Parity.Items.AddRange(new object[] {
-            "5",
-            "6",
-            "7",
-            "8",
-            "9"});
-            this.comboBox_Parity.Location = new System.Drawing.Point(143, 126);
-            this.comboBox_Parity.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox_Parity.Name = "comboBox_Parity";
-            this.comboBox_Parity.Size = new System.Drawing.Size(272, 24);
-            this.comboBox_Parity.TabIndex = 55;
-            // 
-            // comboBox_Stop
-            // 
-            this.comboBox_Stop.FormattingEnabled = true;
-            this.comboBox_Stop.Items.AddRange(new object[] {
-            "5",
-            "6",
-            "7",
-            "8",
-            "9"});
-            this.comboBox_Stop.Location = new System.Drawing.Point(143, 158);
-            this.comboBox_Stop.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox_Stop.Name = "comboBox_Stop";
-            this.comboBox_Stop.Size = new System.Drawing.Size(272, 24);
-            this.comboBox_Stop.TabIndex = 54;
-            // 
-            // comboBox_BitNr
-            // 
-            this.comboBox_BitNr.FormattingEnabled = true;
-            this.comboBox_BitNr.Items.AddRange(new object[] {
-            "5",
-            "6",
-            "7",
-            "8",
-            "9"});
-            this.comboBox_BitNr.Location = new System.Drawing.Point(143, 94);
-            this.comboBox_BitNr.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox_BitNr.Name = "comboBox_BitNr";
-            this.comboBox_BitNr.Size = new System.Drawing.Size(272, 24);
-            this.comboBox_BitNr.TabIndex = 53;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 197);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(116, 16);
-            this.label6.TabIndex = 52;
-            this.label6.Text = "Protokół konntroli:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 166);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 16);
-            this.label5.TabIndex = 51;
-            this.label5.Text = "Bit stopu:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 129);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 16);
-            this.label4.TabIndex = 50;
-            this.label4.Text = "Bit parzystości:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 94);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 16);
-            this.label3.TabIndex = 49;
-            this.label3.Text = "Liczba bitów:";
             // 
             // comboBox_Baud
             // 
@@ -277,6 +171,8 @@
             // 
             // groupBoxConnected
             // 
+            this.groupBoxConnected.Controls.Add(this.numericUpDownHight);
+            this.groupBoxConnected.Controls.Add(this.buttonPreassureFromHight);
             this.groupBoxConnected.Controls.Add(this.numericUpDownPreassure);
             this.groupBoxConnected.Controls.Add(this.buttonWritePreassure);
             this.groupBoxConnected.Controls.Add(this.buttonClearFlash);
@@ -284,10 +180,43 @@
             this.groupBoxConnected.Enabled = false;
             this.groupBoxConnected.Location = new System.Drawing.Point(460, 14);
             this.groupBoxConnected.Name = "groupBoxConnected";
-            this.groupBoxConnected.Size = new System.Drawing.Size(377, 148);
+            this.groupBoxConnected.Size = new System.Drawing.Size(377, 221);
             this.groupBoxConnected.TabIndex = 6;
             this.groupBoxConnected.TabStop = false;
             this.groupBoxConnected.Text = "Operacje po połączeniu";
+            // 
+            // numericUpDownHight
+            // 
+            this.numericUpDownHight.Location = new System.Drawing.Point(23, 159);
+            this.numericUpDownHight.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.numericUpDownHight.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownHight.Name = "numericUpDownHight";
+            this.numericUpDownHight.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDownHight.TabIndex = 8;
+            this.numericUpDownHight.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // buttonPreassureFromHight
+            // 
+            this.buttonPreassureFromHight.Cursor = System.Windows.Forms.Cursors.SizeAll;
+            this.buttonPreassureFromHight.Location = new System.Drawing.Point(168, 152);
+            this.buttonPreassureFromHight.Name = "buttonPreassureFromHight";
+            this.buttonPreassureFromHight.Size = new System.Drawing.Size(191, 50);
+            this.buttonPreassureFromHight.TabIndex = 7;
+            this.buttonPreassureFromHight.Text = "Przelicz ciśnienie dla podanej wysokości";
+            this.buttonPreassureFromHight.UseVisualStyleBackColor = true;
+            this.buttonPreassureFromHight.Click += new System.EventHandler(this.buttonPreassureFromHight_Click);
             // 
             // numericUpDownPreassure
             // 
@@ -333,7 +262,7 @@
             // 
             // buttonShowMessages
             // 
-            this.buttonShowMessages.Location = new System.Drawing.Point(460, 170);
+            this.buttonShowMessages.Location = new System.Drawing.Point(460, 251);
             this.buttonShowMessages.Name = "buttonShowMessages";
             this.buttonShowMessages.Size = new System.Drawing.Size(377, 35);
             this.buttonShowMessages.TabIndex = 7;
@@ -343,10 +272,10 @@
             // 
             // textBoxTest
             // 
-            this.textBoxTest.Location = new System.Drawing.Point(450, 211);
+            this.textBoxTest.Location = new System.Drawing.Point(12, 186);
             this.textBoxTest.Multiline = true;
             this.textBoxTest.Name = "textBoxTest";
-            this.textBoxTest.Size = new System.Drawing.Size(387, 90);
+            this.textBoxTest.Size = new System.Drawing.Size(432, 90);
             this.textBoxTest.TabIndex = 8;
             // 
             // Form1
@@ -366,6 +295,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBoxConnected.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPreassure)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -378,14 +308,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
         private System.Windows.Forms.Button buttonChart;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox comboBox_controlProtocol;
-        private System.Windows.Forms.ComboBox comboBox_Parity;
-        private System.Windows.Forms.ComboBox comboBox_Stop;
-        private System.Windows.Forms.ComboBox comboBox_BitNr;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBox_Baud;
         private System.Windows.Forms.ComboBox comboBox_Port;
         private System.Windows.Forms.Button button_Refresh;
@@ -398,6 +320,8 @@
         private System.Windows.Forms.Button buttonClearFlash;
         private System.Windows.Forms.Button buttonShowMessages;
         private System.Windows.Forms.TextBox textBoxTest;
+        private System.Windows.Forms.NumericUpDown numericUpDownHight;
+        private System.Windows.Forms.Button buttonPreassureFromHight;
     }
 }
 

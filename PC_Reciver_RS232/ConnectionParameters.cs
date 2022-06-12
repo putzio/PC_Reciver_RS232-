@@ -16,7 +16,7 @@ namespace PC_Reciver_RS232
             bitNr = bitNrInit;
             port = portInit;
         }
-        public void UpdateConnectionParameters(int newBaud, int newBitNr, string newPort)
+        public void UpdateConnectionParameters(int newBaud, string newPort, int newBitNr = 8)
         {
             baud = newBaud;
             bitNr = newBitNr;

@@ -33,7 +33,7 @@ namespace PC_Reciver_RS232
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            connectionParameters.UpdateConnectionParameters(Convert.ToInt32(comboBox_Baud.Text), Convert.ToInt16(comboBox_BitNr.Text), comboBox_Port.Text);
+            connectionParameters.UpdateConnectionParameters(Convert.ToInt32(comboBox_Baud.Text), comboBox_Port.Text);
             if(connectionParameters.port == null)
             {
                 MessageBox.Show("Nieprawidłowe parametry połączenia");
@@ -43,7 +43,7 @@ namespace PC_Reciver_RS232
             {
                 serialPort1.PortName = connectionParameters.port;
                 serialPort1.BaudRate = connectionParameters.baud;
-                serialPort1.DataBits = connectionParameters.bitNr;
+                serialPort1.DataBits = 8;
                 serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), "One");
                 serialPort1.Handshake = (Handshake)Enum.Parse(typeof(Handshake), "None");
                 try
@@ -110,10 +110,8 @@ namespace PC_Reciver_RS232
         }
         private void SetText(string text)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             textBoxInfo.Text += text;
-            if (text.Length < 3)
+            if (text.Length < 4)
             {
                 MessageBox.Show("Przesłany tekst: \t" + text + "\t Jest za krótki");
                 return;
@@ -141,18 +139,34 @@ namespace PC_Reciver_RS232
                 altimeterDatas.Enqueue(altimeterData);
                 altimeterDataRange.CheckNewRange(altimeterData);
                 serialPort1.Write("K");
-                sw.Stop();
-                textBoxTest.Text = "TIME:\t"+sw.Elapsed.ToString();
+            }
+            else if(text.Substring(0,3) == "#h:")
+            {
+                Int32 preassure = Convert.ToInt32(text.Substring(3, text.IndexOf("&") - 3));
+                CalculateAndSendSeaLevelPreassure(preassure/100);
+                serialPort1.Write("K");
             }
             else if(text.Substring(0, 3) =="TST")
             {
                 textBoxTest.Text+=text.Substring(4);
             }
 
-            //else if()
+            //else
             //{
             //    MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
             //}
+        }
+        private void CalculateAndSendSeaLevelPreassure(int preassure)
+        {
+            int sealevelPreassure = (int) (preassure / Math.Pow(1.0 - (((double)numericUpDownHight.Value)/ 44330.0), 5.255));
+            String message = "#P:";
+            message += sealevelPreassure.ToString();
+            message += "&";
+            textBoxTest.Text += "\r\nPreassure: ";
+            textBoxTest.Text += preassure.ToString();
+            textBoxTest.Text += "\r\nSeaLevelPreassure: ";
+            textBoxTest.Text += sealevelPreassure.ToString();
+            serialPort1.Write(message);
         }
         private async void PlotAndExport()
         {
@@ -267,7 +281,6 @@ namespace PC_Reciver_RS232
         private void InitialiseConnectionParameters()
         {
             comboBox_Baud.Items.Clear();
-            comboBox_BitNr.Items.Clear();
             comboBox_Port.Items.Clear();
             //Baud rates
             comboBox_Baud.Items.Add(300);
@@ -281,7 +294,7 @@ namespace PC_Reciver_RS232
             comboBox_Baud.Items.Add(57600);
             comboBox_Baud.Items.Add(115200);
             comboBox_Baud.Items.ToString();
-            comboBox_Baud.Text = "9600";
+            comboBox_Baud.Text = "115200";
 
             //Available Serial Ports
             string[] ArrayComPortsNames = null;
@@ -301,13 +314,6 @@ namespace PC_Reciver_RS232
                 comboBox_Port.Text = comboBox_Port.Items[0].ToString();
             }
 
-
-            //Setting number of bits
-            for (int i = 5; i < 10; i++)
-            {
-                comboBox_BitNr.Items.Add(i);
-            }
-            comboBox_BitNr.Text = "8";
         }
 
         private void buttonClearFlash_Click(object sender, EventArgs e)
@@ -335,6 +341,11 @@ namespace PC_Reciver_RS232
                 buttonShowMessages.Text = "Pokaż odbierane wiadomości";
                 textBoxInfo.Visible = false;
             }
+        }
+
+        private void buttonPreassureFromHight_Click(object sender, EventArgs e)
+        {
+            serialPort1.Write("#H");
         }
     }
 }
