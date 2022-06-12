@@ -49,7 +49,7 @@ namespace PC_Reciver_RS232
                 try
                 {
                     serialPort1.Open();
-                    serialPort1.Write("START");
+                    serialPort1.Write("K");
                     buttonConnect.Text = "Zamknij";
                     groupBoxConnected.Enabled = true;
                 }
@@ -116,45 +116,68 @@ namespace PC_Reciver_RS232
                 MessageBox.Show("Przesłany tekst: \t" + text + "\t Jest za krótki");
                 return;
             }
-            if (text.Substring(0, 3) == "END")
+            switch(text.Substring(0, 3))
             {
-                //end of the last data series
-                AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
-                altimeterDatas.Enqueue(altimeterData);
-                PlotAndExport();
-                serialPort1.Write("K");
-                return;
-            }
-            else if (text.Substring(0, 3) == "end")
-            { 
-                //End of data series
-                AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.series);
-                altimeterDatas.Enqueue(altimeterData);
-                serialPort1.Write("K");
-                return;
-            }
-            else if (text.Substring(0, 3) == "#t:")
-            {
-                AltimeterData altimeterData = new AltimeterData(text);
-                altimeterDatas.Enqueue(altimeterData);
-                altimeterDataRange.CheckNewRange(altimeterData);
-                serialPort1.Write("K");
-            }
-            else if(text.Substring(0,3) == "#h:")
-            {
-                Int32 preassure = Convert.ToInt32(text.Substring(3, text.IndexOf("&") - 3));
-                CalculateAndSendSeaLevelPreassure(preassure/100);
-                serialPort1.Write("K");
-            }
-            else if(text.Substring(0, 3) =="TST")
-            {
-                textBoxTest.Text+=text.Substring(4);
+                case "END":
+                    {
+                        //end of the last data series
+                        AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.END, 2137);
+                        altimeterDatas.Enqueue(altimeterData);
+                        PlotAndExport();
+                        serialPort1.Write("K");
+                        return;
+                    }
+                case "end":
+                    {
+                        //End of data series
+                        AltimeterData altimeterData = new AltimeterData(AltimeterData.EndAltimeter.series);
+                        altimeterDatas.Enqueue(altimeterData);
+                        serialPort1.Write("K");
+                        return;
+                    }
+                case "#t:":
+                    {
+                        AltimeterData altimeterData = new AltimeterData(text);
+                        altimeterDatas.Enqueue(altimeterData);
+                        altimeterDataRange.CheckNewRange(altimeterData);
+                        serialPort1.Write("K");
+                        break;
+                    }
+                case "#h:":
+                    {
+                        Int32 preassure = Convert.ToInt32(text.Substring(3, text.IndexOf("&") - 3));
+                        CalculateAndSendSeaLevelPreassure(preassure / 100);
+                        serialPort1.Write("K");
+                        break;
+                    }
+                case "TST":
+                    {
+                        textBoxTest.Text += text.Substring(3, text.IndexOf("&") - 3);
+                        serialPort1.Write("K");
+                        break;
+                    }
+                case "#CM":
+                {
+                    if(textBoxTest.Text.IndexOf("Oczekiwanie") == -1)
+                        textBoxTest.Text += "Oczekiwanie na komendę";
+                    break;
+                }
+                default:
+                    {
+                        if (text.IndexOf("#t:") != -1)
+                        {
+                            AltimeterData altimeterData = new AltimeterData(text.Substring(text.IndexOf("#t:")));
+                            altimeterDatas.Enqueue(altimeterData);
+                            altimeterDataRange.CheckNewRange(altimeterData);
+                            serialPort1.Write("K");
+                        }
+                        else
+                            MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
+                        break;
+                    }
+
             }
 
-            //else
-            //{
-            //    MessageBox.Show("Przesłano dane w nieprawidłowym formacie (#t:220&h:1000$):" + text);
-            //}
         }
         private void CalculateAndSendSeaLevelPreassure(int preassure)
         {
@@ -346,6 +369,11 @@ namespace PC_Reciver_RS232
         private void buttonPreassureFromHight_Click(object sender, EventArgs e)
         {
             serialPort1.Write("#H");
+        }
+
+        private void buttonActual_Click(object sender, EventArgs e)
+        {
+            serialPort1.Write("#A");
         }
     }
 }

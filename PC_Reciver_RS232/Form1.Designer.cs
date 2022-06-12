@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -50,6 +50,7 @@
             this.buttonClearFlash = new System.Windows.Forms.Button();
             this.buttonShowMessages = new System.Windows.Forms.Button();
             this.textBoxTest = new System.Windows.Forms.TextBox();
+            this.buttonActual = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBoxConnected.SuspendLayout();
@@ -73,10 +74,10 @@
             this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart.Legends.Add(legend2);
+            chartArea3.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart.Legends.Add(legend3);
             this.chart.Location = new System.Drawing.Point(12, 307);
             this.chart.Name = "chart";
             this.chart.Size = new System.Drawing.Size(1109, 311);
@@ -161,16 +162,17 @@
             // 
             this.textBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxInfo.Location = new System.Drawing.Point(859, 14);
+            this.textBoxInfo.Location = new System.Drawing.Point(859, 63);
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
             this.textBoxInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxInfo.Size = new System.Drawing.Size(262, 287);
+            this.textBoxInfo.Size = new System.Drawing.Size(262, 238);
             this.textBoxInfo.TabIndex = 5;
             this.textBoxInfo.Visible = false;
             // 
             // groupBoxConnected
             // 
+            this.groupBoxConnected.Controls.Add(this.buttonActual);
             this.groupBoxConnected.Controls.Add(this.numericUpDownHight);
             this.groupBoxConnected.Controls.Add(this.buttonPreassureFromHight);
             this.groupBoxConnected.Controls.Add(this.numericUpDownPreassure);
@@ -180,14 +182,14 @@
             this.groupBoxConnected.Enabled = false;
             this.groupBoxConnected.Location = new System.Drawing.Point(460, 14);
             this.groupBoxConnected.Name = "groupBoxConnected";
-            this.groupBoxConnected.Size = new System.Drawing.Size(377, 221);
+            this.groupBoxConnected.Size = new System.Drawing.Size(377, 271);
             this.groupBoxConnected.TabIndex = 6;
             this.groupBoxConnected.TabStop = false;
             this.groupBoxConnected.Text = "Operacje po połączeniu";
             // 
             // numericUpDownHight
             // 
-            this.numericUpDownHight.Location = new System.Drawing.Point(23, 159);
+            this.numericUpDownHight.Location = new System.Drawing.Point(23, 167);
             this.numericUpDownHight.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -210,9 +212,9 @@
             // buttonPreassureFromHight
             // 
             this.buttonPreassureFromHight.Cursor = System.Windows.Forms.Cursors.SizeAll;
-            this.buttonPreassureFromHight.Location = new System.Drawing.Point(168, 152);
+            this.buttonPreassureFromHight.Location = new System.Drawing.Point(149, 152);
             this.buttonPreassureFromHight.Name = "buttonPreassureFromHight";
-            this.buttonPreassureFromHight.Size = new System.Drawing.Size(191, 50);
+            this.buttonPreassureFromHight.Size = new System.Drawing.Size(210, 50);
             this.buttonPreassureFromHight.TabIndex = 7;
             this.buttonPreassureFromHight.Text = "Przelicz ciśnienie dla podanej wysokości";
             this.buttonPreassureFromHight.UseVisualStyleBackColor = true;
@@ -220,7 +222,7 @@
             // 
             // numericUpDownPreassure
             // 
-            this.numericUpDownPreassure.Location = new System.Drawing.Point(23, 113);
+            this.numericUpDownPreassure.Location = new System.Drawing.Point(23, 111);
             this.numericUpDownPreassure.Maximum = new decimal(new int[] {
             1500,
             0,
@@ -242,9 +244,9 @@
             // 
             // buttonWritePreassure
             // 
-            this.buttonWritePreassure.Location = new System.Drawing.Point(168, 107);
+            this.buttonWritePreassure.Location = new System.Drawing.Point(149, 107);
             this.buttonWritePreassure.Name = "buttonWritePreassure";
-            this.buttonWritePreassure.Size = new System.Drawing.Size(191, 29);
+            this.buttonWritePreassure.Size = new System.Drawing.Size(210, 29);
             this.buttonWritePreassure.TabIndex = 5;
             this.buttonWritePreassure.Text = "Ustaw ciśnienie";
             this.buttonWritePreassure.UseVisualStyleBackColor = true;
@@ -262,9 +264,9 @@
             // 
             // buttonShowMessages
             // 
-            this.buttonShowMessages.Location = new System.Drawing.Point(460, 251);
+            this.buttonShowMessages.Location = new System.Drawing.Point(859, 22);
             this.buttonShowMessages.Name = "buttonShowMessages";
-            this.buttonShowMessages.Size = new System.Drawing.Size(377, 35);
+            this.buttonShowMessages.Size = new System.Drawing.Size(262, 35);
             this.buttonShowMessages.TabIndex = 7;
             this.buttonShowMessages.Text = "Pokaż odbierane wiadomości";
             this.buttonShowMessages.UseVisualStyleBackColor = true;
@@ -275,8 +277,20 @@
             this.textBoxTest.Location = new System.Drawing.Point(12, 186);
             this.textBoxTest.Multiline = true;
             this.textBoxTest.Name = "textBoxTest";
+            this.textBoxTest.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxTest.Size = new System.Drawing.Size(432, 90);
             this.textBoxTest.TabIndex = 8;
+            // 
+            // buttonActual
+            // 
+            this.buttonActual.Location = new System.Drawing.Point(23, 219);
+            this.buttonActual.Name = "buttonActual";
+            this.buttonActual.Size = new System.Drawing.Size(336, 29);
+            this.buttonActual.TabIndex = 9;
+            this.buttonActual.Text = "Podaj aktualne wskazania";
+            this.buttonActual.UseMnemonic = false;
+            this.buttonActual.UseVisualStyleBackColor = true;
+            this.buttonActual.Click += new System.EventHandler(this.buttonActual_Click);
             // 
             // Form1
             // 
@@ -322,6 +336,7 @@
         private System.Windows.Forms.TextBox textBoxTest;
         private System.Windows.Forms.NumericUpDown numericUpDownHight;
         private System.Windows.Forms.Button buttonPreassureFromHight;
+        private System.Windows.Forms.Button buttonActual;
     }
 }
 
